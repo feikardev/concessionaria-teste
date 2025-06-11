@@ -8,7 +8,7 @@ export default function Veiculo() {
 
     const [clicar, setClicar] = useState(false)
     const [clicarAdicionarMarca, setClicarAdicionarMarca] = useState(false)
-    const [marcas, setMarcas] = useState(["hyundai", "toyota", "volkswagen", "fiat", "chevrolet", "jeep", "honda"])
+    const [marcas, setMarcas] = useState([ "hyundai", "toyota", "volkswagen", "fiat", "chevrolet", "jeep", "honda" ])
     const [veiculos, setVeiculos] = useState([])
     const [editarId, setEditarId] = useState(null)
     const [form, setForm] = useState({ status: "" })
