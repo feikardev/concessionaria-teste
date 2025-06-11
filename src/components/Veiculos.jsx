@@ -23,7 +23,7 @@ export default function Veiculo() {
     }
 
     function handleAdicionarMarca(formData) {
-        setMarcas((prevMarcas) => [...prevMarcas, formData.get("marca").toLowerCase()])
+        setMarcas((prevMarcas) => [ ...prevMarcas, formData.get("marca").toLowerCase() ])
         setClicarAdicionarMarca(false)
     }
 
