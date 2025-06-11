@@ -11,7 +11,7 @@ export default function Veiculo() {
     const [marcas, setMarcas] = useState(["hyundai", "toyota", "volkswagen", "fiat", "chevrolet", "jeep", "honda"])
     const [veiculos, setVeiculos] = useState([])
     const [editarId, setEditarId] = useState(null)
-    const [form, setForm] = useState({status: "" })
+    const [form, setForm] = useState({ status: "" })
 
 
     function handleClicar() {
@@ -71,10 +71,18 @@ export default function Veiculo() {
             setEditarId(id)
     }
 
+    function handleChange(event) {
+        const { name, value } = event.target
+        setForm(prevForm => ({
+            ...prevForm,
+            [name]: value
+        }))
+    }
+
     function handleEditar() {
         setVeiculos((prevVeiculos) =>
             prevVeiculos.map((veiculo) =>
-                veiculo.id === editarId ? {...veiculo, ...form} : veiculo
+                veiculo.id === editarId ? {...veiculo, status: form.status} : veiculo
         ))
         setEditarId(null)
     }
@@ -97,7 +105,7 @@ export default function Veiculo() {
                     <>
                         <h1 className="text-4xl font-extrabold mb-8 text-center text-gray-800">Marca</h1>
                         <div className="flex flex-wrap justify-center gap-4 mb-8">
-                        <button onClick={handleClicarAdicionarMarca} className="text-indigo-600 hover:text-indigo-800 cursor-pointer w-7 h-7 transform hover:scale-110 transition duration-150"><Plus /></button>
+                        <button onClick={handleClicarAdicionarMarca} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 uppercase"><Plus /></button>
                             {marcas.map((marca) => (
                                     <button
                                         key={marca}
@@ -110,26 +118,27 @@ export default function Veiculo() {
                     </>
                     : null}
 
-                    {clicarAdicionarMarca ? 
-                        <div>
+                    {clicarAdicionarMarca ?
+                        <>
                             <h1 className="text-4xl font-extrabold mb-8 text-center text-gray-800">Adicionar marca</h1>
-                            <form action={handleAdicionarMarca}>
-                                <input
-                                    type="text"
-                                    id="marca"
-                                    name="marca"
-                                    required
-                                    className="w-full px-4 py-2 uppercase border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-                                    placeholder="Nome da marca"
-                                />
-                            </form>
-
-                        </div>
-                    
-                    
+                                <div className="flex flex-wrap justify-center gap-4 mb-8">
+                                    <form className="flex flex-col sm:flex-row gap-4 w-full justify-center" action={handleAdicionarMarca}>
+                                        <input
+                                            type="text"
+                                            id="marca"
+                                            name="marca"
+                                            required
+                                            className="w-full sm:w-auto flex-grow px-4 py-2 uppercase border border-blue-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                                            placeholder="Nome da marca"
+                                        />
+                                        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 uppercase">Adicionar marca</button>
+                                    
+                                    </form>
+                            </div>
+                        </>                  
                     : null}
 
-                    {clicar ? (veiculos.map((veiculo) =>
+                    {clicar && veiculos.length > 0 ? (veiculos.map((veiculo) =>
                     (     
                         <>          
                             <table className="min-w-full bg-white border-collapse rounded-lg">
@@ -159,11 +168,11 @@ export default function Veiculo() {
                         (<>
                         
                             <h1 className="text-4xl font-extrabold mb-8 text-center text-gray-800">Editar status de {form.modelo}</h1>
-                            <form  className="flex flex-col items-center gap-4" action={handleEditar}>
+                            <form className="flex flex-col items-center gap-4" onSubmit={handleEditar}>
                                 <select
                                     name="status"
                                     value={form.status}
-                                    onChange={handleAdicionarMarca}
+                                    onChange={handleChange}
                                     className="block p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-700 text-base"
                                     >
                                     <option value="" disabled>Status</option>
