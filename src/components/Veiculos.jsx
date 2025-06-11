@@ -138,7 +138,7 @@ export default function Veiculo() {
                         </>                  
                     : null}
 
-                    {clicar && veiculos.length > 0 ? (veiculos.map((veiculo) =>
+                    {clicar ? (veiculos.map((veiculo) =>
                     (     
                         <>          
                             <table className="min-w-full bg-white border-collapse rounded-lg">
