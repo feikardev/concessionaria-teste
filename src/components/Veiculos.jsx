@@ -1,10 +1,14 @@
-import { Pencil, Trash } from 'lucide-react'
+import { Pencil, Plus, Trash } from 'lucide-react'
 import { useState } from 'react'
 import { nanoid } from 'nanoid'
+
+// adicionar marca e adicionar veiculo
 
 export default function Veiculo() {
 
     const [clicar, setClicar] = useState(false)
+    const [clicarAdicionarMarca, setClicarAdicionarMarca] = useState(false)
+    const [marcas, setMarcas] = useState(["hyundai", "toyota", "volkswagen", "fiat", "chevrolet", "jeep", "honda"])
     const [veiculos, setVeiculos] = useState([])
     const [editarId, setEditarId] = useState(null)
     const [form, setForm] = useState({status: "" })
@@ -12,6 +16,15 @@ export default function Veiculo() {
 
     function handleClicar() {
         setClicar((prevClicar) => !prevClicar)
+    }
+
+    function handleClicarAdicionarMarca() {
+        setClicarAdicionarMarca((prevClicarAdicionarMarca) => !prevClicarAdicionarMarca)
+    }
+
+    function handleAdicionarMarca(formData) {
+        setMarcas((prevMarcas) => [...prevMarcas, formData.get("marca").toLowerCase()])
+        setClicarAdicionarMarca(false)
     }
 
     function handleMarca(marca) {
@@ -50,6 +63,7 @@ export default function Veiculo() {
 
         const veiculo = veiculos.find(veiculo => veiculo.id === id)
             setForm({
+                marca: veiculo.marca,
                 modelo: veiculo.modelo,
                 status: veiculo.status
             })
@@ -65,14 +79,6 @@ export default function Veiculo() {
         setEditarId(null)
     }
 
-    function handleChange(event) {
-        const { name, value } = event.target
-        setForm(prevForm => ({
-            ...prevForm,
-            [name]: value
-        }))
-    }
-
     function handleDeletar(id) {
         setVeiculos((prevVeiculos) => prevVeiculos.filter(veiculo => veiculo.id !== id))
     }
@@ -83,23 +89,44 @@ export default function Veiculo() {
                 <div className="container mx-auto p-6 bg-white rounded-xl shadow-2xl max-w-4xl w-full">
                     <h1 className="text-4xl font-extrabold mb-8 text-center text-gray-800">Concessionária</h1>
                     <div className="flex justify-center mb-8"> 
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300" onClick={handleClicar}>Veículos</button>
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 uppercase" onClick={handleClicar}>Veículos</button>
                     </div>
 
 
                     {clicar ?
                     <>
                         <h1 className="text-4xl font-extrabold mb-8 text-center text-gray-800">Marca</h1>
-                        <div className="flex flex-wrap justify-center gap-4 mb-8"> 
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300" onClick={() => handleMarca("hyundai")}>Hyundai</button>
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300" onClick={() => handleMarca("toyota")}>Toyota</button>
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300" onClick={() => handleMarca("volkswagen")}>Volkswagen</button>
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300" onClick={() => handleMarca("fiat")}>Fiat</button>
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300" onClick={() => handleMarca("chevrolet")}>Chevrolet</button>
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300" onClick={() => handleMarca("jeep")}>JEEP</button>
-                            <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300" onClick={() => handleMarca("honda")}>Honda</button>             
+                        <div className="flex flex-wrap justify-center gap-4 mb-8">
+                        <button onClick={handleClicarAdicionarMarca} className="text-indigo-600 hover:text-indigo-800 cursor-pointer w-7 h-7 transform hover:scale-110 transition duration-150"><Plus /></button>
+                            {marcas.map((marca) => (
+                                    <button
+                                        key={marca}
+                                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 uppercase"
+                                        onClick={() => handleMarca(marca)}
+                                    >{marca}
+                                    </button>
+                                ))}             
                         </div>
                     </>
+                    : null}
+
+                    {clicarAdicionarMarca ? 
+                        <div>
+                            <h1 className="text-4xl font-extrabold mb-8 text-center text-gray-800">Adicionar marca</h1>
+                            <form action={handleAdicionarMarca}>
+                                <input
+                                    type="text"
+                                    id="marca"
+                                    name="marca"
+                                    required
+                                    className="w-full px-4 py-2 uppercase border border-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+                                    placeholder="Nome da marca"
+                                />
+                            </form>
+
+                        </div>
+                    
+                    
                     : null}
 
                     {clicar ? (veiculos.map((veiculo) =>
@@ -136,7 +163,7 @@ export default function Veiculo() {
                                 <select
                                     name="status"
                                     value={form.status}
-                                    onChange={handleChange}
+                                    onChange={handleAdicionarMarca}
                                     className="block p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-gray-700 text-base"
                                     >
                                     <option value="" disabled>Status</option>
